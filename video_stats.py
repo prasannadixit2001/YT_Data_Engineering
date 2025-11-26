@@ -1,13 +1,13 @@
 import requests
 import json
 from datetime import date
-
 import os
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="./main.env")
+
+load_dotenv(dotenv_path="./.env")
 
 API_KEY = os.getenv("API_KEY")
-channel_Handle = "MrBeast"
+channel_Handle = os.getenv("channel_Handle")
 maxResults = 50
 
 # Getting the Playlist_id
@@ -48,13 +48,10 @@ def get_video_id(playlist_id):
         #print(len(video_ids))
         print("Video IDs extraction complete")
         return video_ids
-        
-
     except requests.exceptions.RequestException as e:
         raise e
-    
 
-        
+#This function will extract desired data from the video_ids extracted earlier           
 def extract_video_data(video_ids):
     extracted_data = []
     def batch_list(video_id_list, batch_size):
@@ -84,10 +81,10 @@ def extract_video_data(video_ids):
                 }
                 extracted_data.append(video_data)
             return extracted_data
-        
     except requests.exceptions.RequestException as e:
         raise e
-    
+
+#This function will save the data in json format to your localpath    
 def save_to_json(extracted_data):
     os.makedirs("./data", exist_ok=True)
     filepath = f"./data/YT_data_MrBeast_{date.today()}.json"
