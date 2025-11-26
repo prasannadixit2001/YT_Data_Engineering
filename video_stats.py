@@ -4,7 +4,7 @@ from datetime import date
 
 import os
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="./.env")
+load_dotenv(dotenv_path="./main.env")
 
 API_KEY = os.getenv("API_KEY")
 channel_Handle = "MrBeast"
