@@ -1,19 +1,27 @@
 import requests
 import json
 from datetime import date
+
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
+#load_dotenv(dotenv_path="./.env")
 
-load_dotenv(dotenv_path="./.env")
+from airflow.decorators import task
+from airflow.models import Variable
 
-API_KEY = os.getenv("API_KEY")
-channel_Handle = os.getenv("channel_Handle")
+#Initial method of accessing the api key and channel handle
+# API_KEY = os.getenv("API_KEY")
+# channel_Handle = os.getenv("CHANNEL_HANDLE")
+
+API_KEY = Variable.get("API_KEY")
+CHANNEL_HANDLE = Variable.get("CHANNEL_HANDLE")
 maxResults = 50
 
+@task
 # Getting the Playlist_id
-def get_playlist_id(API_KEY,channel_Handle):
+def get_playlist_id():
     try:
-        url = f"https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle={channel_Handle}&key={API_KEY}"
+        url = f"https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle={CHANNEL_HANDLE}&key={API_KEY}"
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
@@ -25,6 +33,7 @@ def get_playlist_id(API_KEY,channel_Handle):
     except requests.exceptions.RequestException as e:
         raise e
 
+@task
 #Using playlist_id Getting the Video_id  
 def get_video_id(playlist_id):
     video_ids = []
@@ -51,6 +60,7 @@ def get_video_id(playlist_id):
     except requests.exceptions.RequestException as e:
         raise e
 
+@task
 #This function will extract desired data from the video_ids extracted earlier           
 def extract_video_data(video_ids):
     extracted_data = []
@@ -84,6 +94,7 @@ def extract_video_data(video_ids):
     except requests.exceptions.RequestException as e:
         raise e
 
+@task
 #This function will save the data in json format to your localpath    
 def save_to_json(extracted_data):
     os.makedirs("./data", exist_ok=True)
@@ -94,7 +105,7 @@ def save_to_json(extracted_data):
 
 #Base start 
 if __name__ == "__main__":
-    playlist_id = get_playlist_id(API_KEY, channel_Handle)
+    playlist_id = get_playlist_id()
     video_ids = get_video_id(playlist_id)
     video_data = extract_video_data(video_ids)
     save_to_json(video_data)
