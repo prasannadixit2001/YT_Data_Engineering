@@ -48,8 +48,11 @@ x-airflow-common:
   &airflow-common
   # Use custom image that builds on top of default airflow image (currently; Default: apache/airflow:2.9.2)
   # Image stored on Dockerhub
-  image: apache/airflow:2.9.2
-  #image: ${DOCKERHUB_NAMESPACE}/${DOCKERHUB_REPOSITORY}:${IMAGE_TAG}
+  #image: apache/airflow:2.9.2
+  image: ${DOCKERHUB_NAMESPACE}/${DOCKERHUB_REPOSITORY}:${IMAGE_TAG}
+  #image: pdixit01/mrbeast_yt_api_elt:1.1.0
+
+  
   # Use the .env file to read the connection params and variables - SWITCH THIS OFF WHEN USING GITHUB ACTIONS
   env_file:
     - .env

@@ -17,4 +17,5 @@ ENV AIRFLOW_HOME=/opt/airflow
 
 COPY requirements.txt /
 
-RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" -r /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
+#RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" -r /requirements.txt

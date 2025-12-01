@@ -90,7 +90,7 @@ def extract_video_data(video_ids):
                     "commentCount": statistics.get('commentCount',None)
                 }
                 extracted_data.append(video_data)
-            return extracted_data
+        return extracted_data
     except requests.exceptions.RequestException as e:
         raise e
 
